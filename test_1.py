@@ -1,16 +1,18 @@
-# This is a sample Python script.
+import pytest
+from selene import browser, have, be
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+@pytest.fixture(autouse=True)
+def browser_context():
+    browser.config.window_height = 1366
+    browser.config.window_width = 1024
+    browser.open('https://ya.ru')
+    yield
+    browser.quit()
 
+def test_success_search():
+    browser.element('#text').should(be.blank).type('yashaka/selene').press_enter()
+    browser.element('html').should(have.text('core strength is its user-oriented API'))
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+def test_empty_search():
+    browser.element('#text').should(be.blank).type('dlskldskdlk').press_enter()
+    browser.element('html').should(have.text('Ничего не нашли'))
