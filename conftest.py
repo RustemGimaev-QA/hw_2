@@ -1,21 +1,13 @@
 import pytest
 from selene import browser
 
-@pytest.fixture(scope="session")
-def setting_browser():
-    browser.config.window_height = 800
-    browser.config.window_width = 600
-
-
+@pytest.fixture(autouse=True)
+def browser_screen_resolution():
+    browser.config.window_height = 1024
+    browser.config.window_width = 1500
 
 @pytest.fixture()
-def open_browser(setting_browser):
-    browser.open('https://google.com')
-    yield
-    browser.quit()
-
-@pytest.fixture()
-def open_duckgo(setting_browser):
+def open_browser(browser_screen_resolution):
     browser.open('https://duckduckgo.com/')
     yield
     browser.quit()
